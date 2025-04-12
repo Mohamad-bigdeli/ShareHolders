@@ -37,8 +37,7 @@ _____________________________________________________________________________
 - Method: GET
 - Description: Search for shareholders based on various criteria
 - Parameters:
-    **q : Search text (shareholder name)**
-    **symbol (optional): Filter by symbol**
+    **q : Search text (shareholder name and symbol)**
 - Response: 
     ```Json
         {

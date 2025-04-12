@@ -1,6 +1,19 @@
 # Core Django
 Django==5.2
 
+# REST Framework & Documentation
+djangorestframework
+drf-yasg[validation]
+
 # Development Tools
 ruff
 python-decouple
+
+# Tests
+pytest
+pytest-django
+
+# Async Processing
+celery
+redis
+django-redis

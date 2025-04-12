@@ -37,7 +37,10 @@ ALLOWED_HOSTS = config(
 
 APPS = ["shareholder",]
 
-THIRD_PARTY_MODULES = []
+THIRD_PARTY_MODULES = [
+    "rest_framework",
+    "drf_yasg",
+    ]
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -127,9 +130,21 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = "/static/"
+STATIC_ROOT = BASE_DIR / "static"
+
+MEDIA_URL = "/media/"
+MEDIA_ROOT = BASE_DIR / "media"
+
+STATICFILES_DIRS = [
+    BASE_DIR / "staticfiles",
+]
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Celery Configuration Options
+CELERY_BROKER_URL=config("CELERY_BROKER_URL")
+CELERY_TIMEZONE=config("CELERY_TIMEZONE")
