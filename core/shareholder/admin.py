@@ -11,7 +11,7 @@ class ShareholderAdmin(admin.ModelAdmin):
         'shareholder_percentage',
         'date',
         'change',
-        'instrument_id',
+        'shareholder_instrument_id',
     )
     
     list_filter = (
