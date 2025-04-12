@@ -1,0 +1,6 @@
+# Core Django
+Django==5.2
+
+# Development Tools
+ruff
+python-decouple
