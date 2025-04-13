@@ -35,8 +35,6 @@ ALLOWED_HOSTS = config(
 
 # Application definition
 
-APPS = ["shareholder",]
-
 THIRD_PARTY_MODULES = [
     "rest_framework",
     "drf_yasg",
@@ -49,7 +47,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    *APPS,
+    "shareholder.apps.ShareholderConfig",
     *THIRD_PARTY_MODULES
 ]
 
@@ -148,3 +146,4 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # Celery Configuration Options
 CELERY_BROKER_URL=config("CELERY_BROKER_URL")
 CELERY_TIMEZONE=config("CELERY_TIMEZONE")
+CELERY_RESULT_BACKEND=config("CELERY_RESULT_BACKEND")

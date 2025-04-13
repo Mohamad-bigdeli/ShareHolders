@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Shareholder
+from .models import Shareholder, ShareholderHistory
 
 # Register your models here.
 
@@ -29,3 +29,5 @@ class ShareholderAdmin(admin.ModelAdmin):
     list_per_page = 50
     date_hierarchy = 'date'
     ordering = ('-date', '-shareholder_percentage')
+
+admin.site.register(ShareholderHistory)
