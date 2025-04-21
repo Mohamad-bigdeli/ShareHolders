@@ -1,25 +1,38 @@
-from rest_framework import generics
-# from rest_framework.permissions import IsAuthenticated
-from .serializers import ShareholdersListSerializer, ShareholdersDocumentSerializer
-from ...models import ShareholdersHistory
-from rest_framework.response import Response
-from rest_framework import status
-from core.paginations import CustomPagination
-from django.views.decorators.cache import cache_page
+from __future__ import annotations
+
+from datetime import datetime
+
 from django.utils.decorators import method_decorator
-from ...documents import ShareholdersDocument
+from django.views.decorators.cache import cache_page
 from django_elasticsearch_dsl_drf.filter_backends import (
-    SearchFilterBackend,
-    SuggesterFilterBackend,
     FilteringFilterBackend,
     MultiMatchSearchFilterBackend,
+    SearchFilterBackend,
+    SuggesterFilterBackend,
 )
 from django_elasticsearch_dsl_drf.viewsets import DocumentViewSet
+from rest_framework import generics, status
+from rest_framework.response import Response
+
+from core.paginations import CustomPagination
+
+from ...documents import ShareholdersDocument
+from ...models import ShareholdersHistory
+from ...services import DailyChanges, MonthlyChanges, WeeklyChanges
+
+# from rest_framework.permissions import IsAuthenticated
+from .serializers import (
+    ShareholderChangeSerializer,
+    ShareholdersDocumentSerializer,
+    ShareholdersListSerializer,
+)
+
 
 class ShareholdersListAPIView(generics.GenericAPIView):
     # permission_classes = [IsAuthenticated]
     serializer_class = ShareholdersListSerializer
     pagination_class = CustomPagination
+    queryset = ShareholdersHistory.objects.all()
     
     @method_decorator(cache_page(60 * 15))
     def get(self, request, *args, **kwargs):
@@ -87,3 +100,90 @@ class ShareholdersDocumentViewSet(DocumentViewSet):
         'shareholder_name.fuzzy',
         'symbol.fuzzy',
     )
+
+class ShareholdersDailyChangesApiView(generics.GenericAPIView):
+
+    serializer_class = ShareholderChangeSerializer
+    # permission_classes = [IsAuthenticated]
+    pagination_class = CustomPagination
+    queryset = ShareholdersHistory.objects.all()
+
+    # @method_decorator(cache_page(60 * 15))
+    def get(self, request, *args, **kwargs):
+        
+        try:
+            symbol = self.kwargs['symbol']
+        except KeyError:
+            return Response({"error": "پارامتر نماد اجباری است"}, status=status.HTTP_400_BAD_REQUEST)
+
+        current_date = datetime.now().date()
+
+        try:
+            service = DailyChanges(symbol=symbol, current_date=current_date)
+            changes_data = service.calculate_daily_changes()
+        except Exception as e:
+            return Response({"error": f"خطا در محاسبه تغییرات: {e!s}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        
+        serializer = ShareholderChangeSerializer(data=changes_data, many=True)
+        if serializer.is_valid():
+            paginated_data = self.paginate_queryset(serializer.data)
+            return self.get_paginated_response(paginated_data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class ShareholdersWeeklyChangesApiView(generics.GenericAPIView):
+
+    serializer_class = ShareholderChangeSerializer
+    # permission_classes = [IsAuthenticated]
+    pagination_class = CustomPagination
+    queryset = ShareholdersHistory.objects.all()
+
+    # @method_decorator(cache_page(60 * 15))
+    def get(self, request, *args, **kwargs):
+        
+        try:
+            symbol = self.kwargs['symbol']
+        except KeyError:
+            return Response({"error": "پارامتر نماد اجباری است"}, status=status.HTTP_400_BAD_REQUEST)
+
+        current_date = datetime.now().date()
+
+        try:
+            service = WeeklyChanges(symbol=symbol, current_date=current_date)
+            changes_data = service.calculate_weekly_changes()
+        except Exception as e:
+            return Response({"error": f"خطا در محاسبه تغییرات: {e!s}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        
+        serializer = ShareholderChangeSerializer(data=changes_data, many=True)
+        if serializer.is_valid():
+            paginated_data = self.paginate_queryset(serializer.data)
+            return self.get_paginated_response(paginated_data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class ShareholdersMonthlyChangesApiView(generics.GenericAPIView):
+
+    serializer_class = ShareholderChangeSerializer
+    # permission_classes = [IsAuthenticated]
+    pagination_class = CustomPagination
+    queryset = ShareholdersHistory.objects.all()
+
+    # @method_decorator(cache_page(60 * 15))
+    def get(self, request, *args, **kwargs):
+        
+        try:
+            symbol = self.kwargs['symbol']
+        except KeyError:
+            return Response({"error": "پارامتر نماد اجباری است"}, status=status.HTTP_400_BAD_REQUEST)
+
+        current_date = datetime.now().date()
+
+        try:
+            service = MonthlyChanges(symbol=symbol, current_date=current_date)
+            changes_data = service.calculate_Monthly_changes()
+        except Exception as e:
+            return Response({"error": f"خطا در محاسبه تغییرات: {e!s}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        
+        serializer = ShareholderChangeSerializer(data=changes_data, many=True)
+        if serializer.is_valid():
+            paginated_data = self.paginate_queryset(serializer.data)
+            return self.get_paginated_response(paginated_data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

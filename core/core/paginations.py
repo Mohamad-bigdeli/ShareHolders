@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 

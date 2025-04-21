@@ -1,5 +1,9 @@
+from __future__ import annotations
+
 from django_elasticsearch_dsl import Document, Index, fields
+
 from .models import ShareholdersHistory
+
 
 SHAREHOLDER_INDEX = Index("shareholders")
 

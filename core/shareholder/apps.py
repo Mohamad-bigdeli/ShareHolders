@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from django.apps import AppConfig
 
 
@@ -6,4 +8,4 @@ class ShareholderConfig(AppConfig):
     name = 'shareholder'
 
     def ready(self):
-        import shareholder.signals
+        pass
