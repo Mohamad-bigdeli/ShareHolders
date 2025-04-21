@@ -14,6 +14,7 @@ class ShareholdersListSerializer(serializers.ModelSerializer):
         fields = [
             "id", 
             "date",
+            "jalali_date",
             "shareholder_id",
             "shareholder_name",
             "shareholder_percentage",
