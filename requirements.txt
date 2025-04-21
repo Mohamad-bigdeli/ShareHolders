@@ -1,6 +1,5 @@
 # Core Django
-Django==5.2
-
+Django==4.2
 # REST Framework & Documentation
 djangorestframework
 drf-yasg[validation]
@@ -12,8 +11,21 @@ python-decouple
 # Tests
 pytest
 pytest-django
+faker
 
 # Async Processing
 celery
 redis
 django-redis
+
+# Database & Search
+django-elasticsearch-dsl==7.3
+django-elasticsearch-dsl-drf==0.22.5
+elasticsearch==7.17.9
+elasticsearch-dsl==7.4.0
+psycopg2-binary
+
+# Jalali date
+django_jalali
+jdatetime
+holidays

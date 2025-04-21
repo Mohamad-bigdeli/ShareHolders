@@ -38,6 +38,10 @@ ALLOWED_HOSTS = config(
 THIRD_PARTY_MODULES = [
     "rest_framework",
     "drf_yasg",
+    "django_elasticsearch_dsl",
+    "django_elasticsearch_dsl_drf",
+    "django_jalali"
+    
     ]
 
 INSTALLED_APPS = [
@@ -92,8 +96,19 @@ if DEBUG:
         }
     }
 else:
-    pass
-
+    DATABASES = {
+        'default': {
+            "ENGINE": "django.db.backends.postgresql",
+            "NAME": config("DB_NAME"),
+            "USER": config("DB_USER"),
+            "PASSWORD": config("DB_PASSWORD"),
+            "HOST": "db",
+            "PORT": "5432",
+            'OPTIONS': {
+                'options': '-c client_encoding=UTF8'  
+            }
+        }
+    }
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
 
@@ -147,3 +162,11 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 CELERY_BROKER_URL=config("CELERY_BROKER_URL")
 CELERY_TIMEZONE=config("CELERY_TIMEZONE")
 CELERY_RESULT_BACKEND=config("CELERY_RESULT_BACKEND")
+
+# Elasticsearch configs
+ELASTICSEARCH_DSL = {
+    "default": {
+        "hosts": "http://elasticsearch:9200",
+        "timeout": 30,
+    },
+}

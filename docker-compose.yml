@@ -2,6 +2,22 @@ version: '3.8'
 
 services:
 
+  db:
+    container_name: db  
+    image: postgres:alpine
+    env_file:
+    - ./core/.env
+    environment:
+      - POSTGRES_DB=bahoosh
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=mhmdbigdeli031@
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    ports:
+      - "5432:5432"
+    networks:
+      - main
+
   backend:
     container_name: backend
     build: .
@@ -17,6 +33,37 @@ services:
       - main
     depends_on:
       - redis
+      - db
+      - elasticsearch
+      # - kibana
+
+  elasticsearch:
+    image: elasticsearch:7.17.0
+    container_name: elasticsearch
+    environment:
+      - discovery.type=single-node  
+      - ES_JAVA_OPTS=-Xms512m -Xmx512m  
+      - xpack.security.enabled=false 
+    ports:
+      - "9200:9200" 
+    volumes:
+      - elasticsearch_data:/usr/share/elasticsearch/data 
+    networks:
+      - main
+    depends_on:
+      - db
+
+  # kibana:
+  #   image: kibana:7.17.0
+  #   container_name: kibana
+  #   ports:
+  #     - "5601:5601" 
+  #   environment:
+  #     - ELASTICSEARCH_HOSTS=http://elasticsearch:9200  
+  #   networks:
+  #     - main
+  #   depends_on:
+  #     - elasticsearch 
   
   redis:
     container_name: redis
@@ -40,12 +87,15 @@ services:
     depends_on:
       - redis
       - backend
+      - db
     restart: unless-stopped
     networks:
       - main
 
 volumes:
   redis_data:
+  postgres_data:
+  elasticsearch_data: 
 
 networks:
   main:
