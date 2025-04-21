@@ -108,7 +108,7 @@ class ShareholdersDailyChangesApiView(generics.GenericAPIView):
     pagination_class = CustomPagination
     queryset = ShareholdersHistory.objects.all()
 
-    # @method_decorator(cache_page(60 * 15))
+    @method_decorator(cache_page(60 * 15))
     def get(self, request, *args, **kwargs):
         
         try:
@@ -137,7 +137,7 @@ class ShareholdersWeeklyChangesApiView(generics.GenericAPIView):
     pagination_class = CustomPagination
     queryset = ShareholdersHistory.objects.all()
 
-    # @method_decorator(cache_page(60 * 15))
+    @method_decorator(cache_page(60 * 15))
     def get(self, request, *args, **kwargs):
         
         try:
@@ -166,7 +166,7 @@ class ShareholdersMonthlyChangesApiView(generics.GenericAPIView):
     pagination_class = CustomPagination
     queryset = ShareholdersHistory.objects.all()
 
-    # @method_decorator(cache_page(60 * 15))
+    @method_decorator(cache_page(60 * 15))
     def get(self, request, *args, **kwargs):
         
         try:
