@@ -34,7 +34,7 @@ services:
     depends_on:
       - redis
       - db
-      - elasticsearch
+      # - elasticsearch
       # - kibana
 
   # elasticsearch:
@@ -95,7 +95,7 @@ services:
 volumes:
   redis_data:
   postgres_data:
-  elasticsearch_data: 
+  # elasticsearch_data: 
 
 networks:
   main:
