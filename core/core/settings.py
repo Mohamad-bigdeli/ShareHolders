@@ -173,3 +173,14 @@ ELASTICSEARCH_DSL = {
         "timeout": 30,
     },
 }
+
+# caching configs
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": "redis://redis:6379/1",
+        "OPTIONS": {
+            "CLIENT": "django_redis.client.DefaultClient",
+        },
+    }
+}
