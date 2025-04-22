@@ -34,24 +34,24 @@ services:
     depends_on:
       - redis
       - db
-      # - elasticsearch
+      - elasticsearch
       # - kibana
 
-  # elasticsearch:
-  #   image: elasticsearch:7.17.0
-  #   container_name: elasticsearch
-  #   environment:
-  #     - discovery.type=single-node  
-  #     - ES_JAVA_OPTS=-Xms512m -Xmx512m  
-  #     - xpack.security.enabled=false 
-  #   ports:
-  #     - "9200:9200" 
-  #   volumes:
-  #     - elasticsearch_data:/usr/share/elasticsearch/data 
-  #   networks:
-  #     - main
-  #   depends_on:
-  #     - db
+  elasticsearch:
+    image: elasticsearch:7.17.0
+    container_name: elasticsearch
+    environment:
+      - discovery.type=single-node  
+      - ES_JAVA_OPTS=-Xms512m -Xmx512m  
+      - xpack.security.enabled=false 
+    ports:
+      - "9200:9200" 
+    volumes:
+      - elasticsearch_data:/usr/share/elasticsearch/data 
+    networks:
+      - main
+    depends_on:
+      - db
 
   # kibana:
   #   image: kibana:7.17.0
@@ -95,7 +95,7 @@ services:
 volumes:
   redis_data:
   postgres_data:
-  # elasticsearch_data: 
+  elasticsearch_data: 
 
 networks:
   main:

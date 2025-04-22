@@ -18,7 +18,6 @@ from core.paginations import CustomPagination
 
 from ...documents import ShareholdersDocument
 from ...models import ShareholdersHistory
-from ...services import DailyChanges, MonthlyChanges, WeeklyChanges
 from ...tasks import daily_changes_task, weekly_changes_task, monthly_changes_task
 
 # from rest_framework.permissions import IsAuthenticated
@@ -55,52 +54,52 @@ class ShareholdersListAPIView(generics.GenericAPIView):
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
-# class ShareholdersDocumentViewSet(DocumentViewSet):
-#     # permission_classes = [IsAuthenticated]
-#     document = ShareholdersDocument
-#     serializer_class = ShareholdersDocumentSerializer
+class ShareholdersDocumentViewSet(DocumentViewSet):
+    # permission_classes = [IsAuthenticated]
+    document = ShareholdersDocument
+    serializer_class = ShareholdersDocumentSerializer
 
-#     filter_backends = [
-#         SearchFilterBackend,
-#         SuggesterFilterBackend,
-#         FilteringFilterBackend,
-#         MultiMatchSearchFilterBackend
-#     ] 
+    filter_backends = [
+        SearchFilterBackend,
+        SuggesterFilterBackend,
+        FilteringFilterBackend,
+        MultiMatchSearchFilterBackend
+    ] 
 
-#     search_fields = (
-#         'shareholder_name',
-#         'symbol',
-#     )
-#     multi_match_search_fields = {
-#         "symbol": {"boost": 4},
-#         "shareholder_name": {"boost": 3},
-#     }
-#     multi_match_options = {
-#         "fuzziness": "AUTO",
-#         "prefix_length": 2,
-#         "max_expansions": 50,
-#     }
+    search_fields = (
+        'shareholder_name',
+        'symbol',
+    )
+    multi_match_search_fields = {
+        "symbol": {"boost": 4},
+        "shareholder_name": {"boost": 3},
+    }
+    multi_match_options = {
+        "fuzziness": "AUTO",
+        "prefix_length": 2,
+        "max_expansions": 50,
+    }
     
-#     filter_fields = {
-#         'shareholder_name': 'shareholder_name.raw',
-#         'symbol': 'symbol.raw',
-#     }
+    filter_fields = {
+        'shareholder_name': 'shareholder_name.raw',
+        'symbol': 'symbol.raw',
+    }
 
-#     suggester_fields = {
-#         'shareholder_name_suggest': {
-#             'field': 'shareholder_name.suggest',
-#             'suggesters': ['completion'],
-#         },
-#         'symbol_suggest': {
-#             'field': 'symbol.suggest',
-#             'suggesters': ['completion'],
-#         },
-#     }
+    suggester_fields = {
+        'shareholder_name_suggest': {
+            'field': 'shareholder_name.suggest',
+            'suggesters': ['completion'],
+        },
+        'symbol_suggest': {
+            'field': 'symbol.suggest',
+            'suggesters': ['completion'],
+        },
+    }
 
-#     fuzzy_search_fields = (
-#         'shareholder_name.fuzzy',
-#         'symbol.fuzzy',
-#     )
+    fuzzy_search_fields = (
+        'shareholder_name.fuzzy',
+        'symbol.fuzzy',
+    )
 
 class ShareholdersDailyChangesApiView(generics.GenericAPIView):
 
@@ -120,7 +119,8 @@ class ShareholdersDailyChangesApiView(generics.GenericAPIView):
         current_date = datetime.now().date()
 
         try:
-            changes_data = daily_changes_task.delay(symbol=symbol, current_date=current_date)
+            task_result = daily_changes_task.delay(symbol=symbol, current_date=current_date)
+            changes_data = task_result.get()
         except Exception as e:
             return Response({"error": f"خطا در محاسبه تغییرات: {e!s}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         
@@ -148,7 +148,8 @@ class ShareholdersWeeklyChangesApiView(generics.GenericAPIView):
         current_date = datetime.now().date()
 
         try:
-            changes_data = weekly_changes_task.delay(symbol=symbol, current_date=current_date)
+            task_result = weekly_changes_task.delay(symbol=symbol, current_date=current_date)
+            changes_data = task_result.get()
         except Exception as e:
             return Response({"error": f"خطا در محاسبه تغییرات: {e!s}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         
@@ -176,7 +177,8 @@ class ShareholdersMonthlyChangesApiView(generics.GenericAPIView):
         current_date = datetime.now().date()
 
         try:
-            changes_data = monthly_changes_task.delay(symbol=symbol, current_date=current_date)
+            task_result = monthly_changes_task.delay(symbol=symbol, current_date=current_date)
+            changes_data = task_result.get()
         except Exception as e:
             return Response({"error": f"خطا در محاسبه تغییرات: {e!s}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         
