@@ -1,9 +1,7 @@
 from __future__ import annotations
 
-from django_elasticsearch_dsl_drf.serializers import DocumentSerializer
 from rest_framework import serializers
 
-from ...documents import ShareholdersDocument
 from ...models import ShareholdersHistory
 
 
@@ -15,25 +13,6 @@ class ShareholdersListSerializer(serializers.ModelSerializer):
             "id", 
             "date",
             "jalali_date",
-            "shareholder_id",
-            "shareholder_name",
-            "shareholder_percentage",
-            "shareholder_shares",
-            "change",
-            "symbol",
-            "shareholder_instrument_id",
-            "created_at",
-            "updated_at"
-        ]
-        read_only_fields = fields
-
-class ShareholdersDocumentSerializer(DocumentSerializer):
-
-    class Meta:
-        document = ShareholdersDocument
-        fields = [
-            "id", 
-            "date",
             "shareholder_id",
             "shareholder_name",
             "shareholder_percentage",

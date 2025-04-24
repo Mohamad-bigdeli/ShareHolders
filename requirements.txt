@@ -5,7 +5,7 @@ djangorestframework
 drf-yasg[validation]
 
 # Development Tools
-ruff
+ruff==0.6.8
 python-decouple
 
 # Tests
@@ -19,10 +19,6 @@ redis
 django-redis
 
 # Database & Search
-django-elasticsearch-dsl==7.3
-django-elasticsearch-dsl-drf==0.22.5
-elasticsearch==7.17.9
-elasticsearch-dsl==7.4.0
 psycopg2-binary
 
 # Jalali date

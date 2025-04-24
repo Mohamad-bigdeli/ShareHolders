@@ -29,6 +29,7 @@ class ShareholdersHistory(models.Model):
             models.Index(fields=['symbol']),
             models.Index(fields=['date']),
             models.Index(fields=['shareholder_name']),
+            models.Index(fields=["shareholder_id"])
         ]
 
     def __str__(self):
